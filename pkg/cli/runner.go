@@ -17,7 +17,7 @@ import (
 	"github.com/aquaproj/aqua/v2/pkg/runtime"
 	"github.com/sirupsen/logrus"
 	"github.com/suzuki-shunsuke/go-osenv/osenv"
-	"github.com/urfave/cli/v2"
+	"github.com/urfave/cli/v3"
 )
 
 type Runner struct {
@@ -35,7 +35,7 @@ type LDFlags struct {
 	Date    string
 }
 
-func (r *Runner) setParam(c *cli.Context, commandName string, param *config.Param) error { //nolint:funlen,cyclop
+func (r *Runner) setParam(c *cli.Command, commandName string, param *config.Param) error { //nolint:funlen,cyclop
 	wd, err := os.Getwd()
 	if err != nil {
 		return fmt.Errorf("get the current directory: %w", err)
@@ -221,7 +221,7 @@ func (r *Runner) Run(ctx context.Context, args ...string) error { //nolint:funle
 	return app.RunContext(ctx, args) //nolint:wrapcheck
 }
 
-func exitErrHandlerFunc(c *cli.Context, err error) {
+func exitErrHandlerFunc(c *cli.Command, err error) {
 	if c.Command.Name != "exec" {
 		cli.HandleExitCoder(err)
 		return

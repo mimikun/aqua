@@ -5,7 +5,7 @@ import (
 
 	"github.com/aquaproj/aqua/v2/pkg/config"
 	"github.com/aquaproj/aqua/v2/pkg/controller"
-	"github.com/urfave/cli/v2"
+	"github.com/urfave/cli/v3"
 )
 
 func (r *Runner) newInfoCommand() *cli.Command {
@@ -19,7 +19,7 @@ $ aqua info`,
 	}
 }
 
-func (r *Runner) info(c *cli.Context) error {
+func (r *Runner) info(c *cli.Command) error {
 	tracer, err := startTrace(c.String("trace"))
 	if err != nil {
 		return err
@@ -36,6 +36,6 @@ func (r *Runner) info(c *cli.Context) error {
 	if err := r.setParam(c, "info", param); err != nil {
 		return fmt.Errorf("parse the command line arguments: %w", err)
 	}
-	ctrl := controller.InitializeInfoCommandController(c.Context, param, r.Runtime)
-	return ctrl.Info(c.Context, r.LogE, param) //nolint:wrapcheck
+	ctrl := controller.InitializeInfoCommandController(c.Command, param, r.Runtime)
+	return ctrl.Info(c.Command, r.LogE, param) //nolint:wrapcheck
 }

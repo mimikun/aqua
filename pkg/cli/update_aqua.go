@@ -6,7 +6,7 @@ import (
 
 	"github.com/aquaproj/aqua/v2/pkg/config"
 	"github.com/aquaproj/aqua/v2/pkg/controller"
-	"github.com/urfave/cli/v2"
+	"github.com/urfave/cli/v3"
 )
 
 func (r *Runner) newUpdateAquaCommand() *cli.Command {
@@ -32,7 +32,7 @@ $ aqua update-aqua v1.20.0 # Install v1.20.0
 	}
 }
 
-func (r *Runner) updaetAquaAction(c *cli.Context) error {
+func (r *Runner) updaetAquaAction(c *cli.Command) error {
 	tracer, err := startTrace(c.String("trace"))
 	if err != nil {
 		return err
@@ -49,6 +49,6 @@ func (r *Runner) updaetAquaAction(c *cli.Context) error {
 	if err := r.setParam(c, "update-aqua", param); err != nil {
 		return fmt.Errorf("parse the command line arguments: %w", err)
 	}
-	ctrl := controller.InitializeUpdateAquaCommandController(c.Context, param, http.DefaultClient, r.Runtime)
-	return ctrl.UpdateAqua(c.Context, r.LogE, param) //nolint:wrapcheck
+	ctrl := controller.InitializeUpdateAquaCommandController(c.Command, param, http.DefaultClient, r.Runtime)
+	return ctrl.UpdateAqua(c.Command, r.LogE, param) //nolint:wrapcheck
 }

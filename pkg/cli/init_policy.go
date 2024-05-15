@@ -5,7 +5,7 @@ import (
 
 	"github.com/aquaproj/aqua/v2/pkg/config"
 	"github.com/aquaproj/aqua/v2/pkg/controller"
-	"github.com/urfave/cli/v2"
+	"github.com/urfave/cli/v3"
 )
 
 func (r *Runner) newInitPolicyCommand() *cli.Command {
@@ -24,7 +24,7 @@ $ aqua init-policy foo.yaml # create foo.yaml`,
 	}
 }
 
-func (r *Runner) initPolicyAction(c *cli.Context) error {
+func (r *Runner) initPolicyAction(c *cli.Command) error {
 	tracer, err := startTrace(c.String("trace"))
 	if err != nil {
 		return err
@@ -41,6 +41,6 @@ func (r *Runner) initPolicyAction(c *cli.Context) error {
 	if err := r.setParam(c, "init-policy", param); err != nil {
 		return fmt.Errorf("parse the command line arguments: %w", err)
 	}
-	ctrl := controller.InitializeInitPolicyCommandController(c.Context)
+	ctrl := controller.InitializeInitPolicyCommandController(c.Command)
 	return ctrl.Init(r.LogE, c.Args().First()) //nolint:wrapcheck
 }

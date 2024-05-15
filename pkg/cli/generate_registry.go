@@ -7,7 +7,7 @@ import (
 
 	"github.com/aquaproj/aqua/v2/pkg/config"
 	"github.com/aquaproj/aqua/v2/pkg/controller"
-	"github.com/urfave/cli/v2"
+	"github.com/urfave/cli/v3"
 )
 
 const generateRegistryDescription = `Generate a template of Registry package configuration.
@@ -112,7 +112,7 @@ func (r *Runner) newGenerateRegistryCommand() *cli.Command {
 	}
 }
 
-func (r *Runner) generateRegistryAction(c *cli.Context) error {
+func (r *Runner) generateRegistryAction(c *cli.Command) error {
 	tracer, err := startTrace(c.String("trace"))
 	if err != nil {
 		return err
@@ -129,6 +129,6 @@ func (r *Runner) generateRegistryAction(c *cli.Context) error {
 	if err := r.setParam(c, "generate-registry", param); err != nil {
 		return fmt.Errorf("parse the command line arguments: %w", err)
 	}
-	ctrl := controller.InitializeGenerateRegistryCommandController(c.Context, param, http.DefaultClient, os.Stdout)
-	return ctrl.GenerateRegistry(c.Context, param, r.LogE, c.Args().Slice()...) //nolint:wrapcheck
+	ctrl := controller.InitializeGenerateRegistryCommandController(c.Command, param, http.DefaultClient, os.Stdout)
+	return ctrl.GenerateRegistry(c.Command, param, r.LogE, c.Args().Slice()...) //nolint:wrapcheck
 }

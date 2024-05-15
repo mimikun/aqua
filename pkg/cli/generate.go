@@ -6,7 +6,7 @@ import (
 
 	"github.com/aquaproj/aqua/v2/pkg/config"
 	"github.com/aquaproj/aqua/v2/pkg/controller"
-	"github.com/urfave/cli/v2"
+	"github.com/urfave/cli/v3"
 )
 
 const generateDescription = `Search packages in registries and output the configuration interactively.
@@ -168,7 +168,7 @@ func (r *Runner) newGenerateCommand() *cli.Command {
 	}
 }
 
-func (r *Runner) generateAction(c *cli.Context) error {
+func (r *Runner) generateAction(c *cli.Command) error {
 	tracer, err := startTrace(c.String("trace"))
 	if err != nil {
 		return err
@@ -185,6 +185,6 @@ func (r *Runner) generateAction(c *cli.Context) error {
 	if err := r.setParam(c, "generate", param); err != nil {
 		return fmt.Errorf("parse the command line arguments: %w", err)
 	}
-	ctrl := controller.InitializeGenerateCommandController(c.Context, param, http.DefaultClient, r.Runtime)
-	return ctrl.Generate(c.Context, r.LogE, param, c.Args().Slice()...) //nolint:wrapcheck
+	ctrl := controller.InitializeGenerateCommandController(c.Command, param, http.DefaultClient, r.Runtime)
+	return ctrl.Generate(c.Command, r.LogE, param, c.Args().Slice()...) //nolint:wrapcheck
 }

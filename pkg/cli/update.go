@@ -6,7 +6,7 @@ import (
 
 	"github.com/aquaproj/aqua/v2/pkg/config"
 	"github.com/aquaproj/aqua/v2/pkg/controller"
-	"github.com/urfave/cli/v2"
+	"github.com/urfave/cli/v3"
 )
 
 func (r *Runner) newUpdateCommand() *cli.Command {
@@ -119,7 +119,7 @@ You can also specify a version.
   $ aqua update gh@v2.30.0
 `
 
-func (r *Runner) updateAction(c *cli.Context) error {
+func (r *Runner) updateAction(c *cli.Command) error {
 	tracer, err := startTrace(c.String("trace"))
 	if err != nil {
 		return err
@@ -136,6 +136,6 @@ func (r *Runner) updateAction(c *cli.Context) error {
 	if err := r.setParam(c, "update", param); err != nil {
 		return fmt.Errorf("parse the command line arguments: %w", err)
 	}
-	ctrl := controller.InitializeUpdateCommandController(c.Context, param, http.DefaultClient, r.Runtime)
-	return ctrl.Update(c.Context, r.LogE, param) //nolint:wrapcheck
+	ctrl := controller.InitializeUpdateCommandController(c.Command, param, http.DefaultClient, r.Runtime)
+	return ctrl.Update(c.Command, r.LogE, param) //nolint:wrapcheck
 }

@@ -6,7 +6,7 @@ import (
 
 	"github.com/aquaproj/aqua/v2/pkg/config"
 	"github.com/aquaproj/aqua/v2/pkg/controller"
-	"github.com/urfave/cli/v2"
+	"github.com/urfave/cli/v3"
 )
 
 func (r *Runner) newRemoveCommand() *cli.Command {
@@ -46,7 +46,7 @@ Limitation:
 	}
 }
 
-func (r *Runner) removeAction(c *cli.Context) error {
+func (r *Runner) removeAction(c *cli.Command) error {
 	tracer, err := startTrace(c.String("trace"))
 	if err != nil {
 		return err
@@ -64,8 +64,8 @@ func (r *Runner) removeAction(c *cli.Context) error {
 		return fmt.Errorf("parse the command line arguments: %w", err)
 	}
 	param.SkipLink = true
-	ctrl := controller.InitializeRemoveCommandController(c.Context, param, http.DefaultClient, r.Runtime)
-	if err := ctrl.Remove(c.Context, r.LogE, param); err != nil {
+	ctrl := controller.InitializeRemoveCommandController(c.Command, param, http.DefaultClient, r.Runtime)
+	if err := ctrl.Remove(c.Command, r.LogE, param); err != nil {
 		return err //nolint:wrapcheck
 	}
 	return nil

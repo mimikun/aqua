@@ -8,7 +8,7 @@ import (
 
 	"github.com/aquaproj/aqua/v2/pkg/config"
 	"github.com/aquaproj/aqua/v2/pkg/controller"
-	"github.com/urfave/cli/v2"
+	"github.com/urfave/cli/v3"
 )
 
 var errCommandIsRequired = errors.New("command is required")
@@ -36,7 +36,7 @@ https://github.com/cli/cli/releases/tag/v2.4.0`,
 	}
 }
 
-func (r *Runner) execAction(c *cli.Context) error {
+func (r *Runner) execAction(c *cli.Command) error {
 	tracer, err := startTrace(c.String("trace"))
 	if err != nil {
 		return err
@@ -53,10 +53,10 @@ func (r *Runner) execAction(c *cli.Context) error {
 	if err := r.setParam(c, "exec", param); err != nil {
 		return fmt.Errorf("parse the command line arguments: %w", err)
 	}
-	ctrl := controller.InitializeExecCommandController(c.Context, param, http.DefaultClient, r.Runtime)
+	ctrl := controller.InitializeExecCommandController(c.Command, param, http.DefaultClient, r.Runtime)
 	exeName, args, err := parseExecArgs(c.Args().Slice())
 	if err != nil {
 		return err
 	}
-	return ctrl.Exec(c.Context, r.LogE, param, exeName, args...) //nolint:wrapcheck
+	return ctrl.Exec(c.Command, r.LogE, param, exeName, args...) //nolint:wrapcheck
 }

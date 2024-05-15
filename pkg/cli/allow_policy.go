@@ -5,7 +5,7 @@ import (
 
 	"github.com/aquaproj/aqua/v2/pkg/config"
 	"github.com/aquaproj/aqua/v2/pkg/controller"
-	"github.com/urfave/cli/v2"
+	"github.com/urfave/cli/v3"
 )
 
 func (r *Runner) newAllowPolicyCommand() *cli.Command {
@@ -20,7 +20,7 @@ $ aqua policy allow [<policy file path>]
 	}
 }
 
-func (r *Runner) allowPolicyAction(c *cli.Context) error {
+func (r *Runner) allowPolicyAction(c *cli.Command) error {
 	tracer, err := startTrace(c.String("trace"))
 	if err != nil {
 		return err
@@ -37,6 +37,6 @@ func (r *Runner) allowPolicyAction(c *cli.Context) error {
 	if err := r.setParam(c, "allow-policy", param); err != nil {
 		return fmt.Errorf("parse the command line arguments: %w", err)
 	}
-	ctrl := controller.InitializeAllowPolicyCommandController(c.Context, param)
+	ctrl := controller.InitializeAllowPolicyCommandController(c.Command, param)
 	return ctrl.Allow(r.LogE, param, c.Args().First()) //nolint:wrapcheck
 }

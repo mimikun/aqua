@@ -6,7 +6,7 @@ import (
 
 	"github.com/aquaproj/aqua/v2/pkg/config"
 	"github.com/aquaproj/aqua/v2/pkg/controller"
-	"github.com/urfave/cli/v2"
+	"github.com/urfave/cli/v3"
 )
 
 func (r *Runner) newListCommand() *cli.Command {
@@ -50,7 +50,7 @@ $ aqua list -installed -a
 	}
 }
 
-func (r *Runner) listAction(c *cli.Context) error {
+func (r *Runner) listAction(c *cli.Command) error {
 	tracer, err := startTrace(c.String("trace"))
 	if err != nil {
 		return err
@@ -67,6 +67,6 @@ func (r *Runner) listAction(c *cli.Context) error {
 	if err := r.setParam(c, "list", param); err != nil {
 		return fmt.Errorf("parse the command line arguments: %w", err)
 	}
-	ctrl := controller.InitializeListCommandController(c.Context, param, http.DefaultClient, r.Runtime)
-	return ctrl.List(c.Context, param, r.LogE) //nolint:wrapcheck
+	ctrl := controller.InitializeListCommandController(c.Command, param, http.DefaultClient, r.Runtime)
+	return ctrl.List(c.Command, param, r.LogE) //nolint:wrapcheck
 }

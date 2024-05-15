@@ -5,7 +5,7 @@ import (
 
 	"github.com/aquaproj/aqua/v2/pkg/config"
 	"github.com/suzuki-shunsuke/go-osenv/osenv"
-	"github.com/urfave/cli/v2"
+	"github.com/urfave/cli/v3"
 )
 
 func (r *Runner) newRootDirCommand() *cli.Command {
@@ -24,7 +24,7 @@ $ export "PATH=$(aqua root-dir)/bin:PATH"
 	}
 }
 
-func (r *Runner) rootDirAction(c *cli.Context) error {
+func (r *Runner) rootDirAction(c *cli.Command) error {
 	tracer, err := startTrace(c.String("trace"))
 	if err != nil {
 		return err

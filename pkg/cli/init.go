@@ -5,7 +5,7 @@ import (
 
 	"github.com/aquaproj/aqua/v2/pkg/config"
 	"github.com/aquaproj/aqua/v2/pkg/controller"
-	"github.com/urfave/cli/v2"
+	"github.com/urfave/cli/v3"
 )
 
 func (r *Runner) newInitCommand() *cli.Command {
@@ -21,7 +21,7 @@ $ aqua init foo.yaml # create foo.yaml`,
 	}
 }
 
-func (r *Runner) initAction(c *cli.Context) error {
+func (r *Runner) initAction(c *cli.Command) error {
 	tracer, err := startTrace(c.String("trace"))
 	if err != nil {
 		return err
@@ -38,6 +38,6 @@ func (r *Runner) initAction(c *cli.Context) error {
 	if err := r.setParam(c, "init", param); err != nil {
 		return fmt.Errorf("parse the command line arguments: %w", err)
 	}
-	ctrl := controller.InitializeInitCommandController(c.Context, param)
-	return ctrl.Init(c.Context, c.Args().First(), r.LogE) //nolint:wrapcheck
+	ctrl := controller.InitializeInitCommandController(c.Command, param)
+	return ctrl.Init(c.Command, c.Args().First(), r.LogE) //nolint:wrapcheck
 }

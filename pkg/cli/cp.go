@@ -6,7 +6,7 @@ import (
 
 	"github.com/aquaproj/aqua/v2/pkg/config"
 	"github.com/aquaproj/aqua/v2/pkg/controller"
-	"github.com/urfave/cli/v2"
+	"github.com/urfave/cli/v3"
 )
 
 func (r *Runner) newCpCommand() *cli.Command {
@@ -64,7 +64,7 @@ $ aqua cp --exclude-tags foo # Copy only packages not having a tag "foo"
 	}
 }
 
-func (r *Runner) cpAction(c *cli.Context) error {
+func (r *Runner) cpAction(c *cli.Command) error {
 	tracer, err := startTrace(c.String("trace"))
 	if err != nil {
 		return err
@@ -82,8 +82,8 @@ func (r *Runner) cpAction(c *cli.Context) error {
 		return fmt.Errorf("parse the command line arguments: %w", err)
 	}
 	param.SkipLink = true
-	ctrl := controller.InitializeCopyCommandController(c.Context, param, http.DefaultClient, r.Runtime)
-	if err := ctrl.Copy(c.Context, r.LogE, param); err != nil {
+	ctrl := controller.InitializeCopyCommandController(c.Command, param, http.DefaultClient, r.Runtime)
+	if err := ctrl.Copy(c.Command, r.LogE, param); err != nil {
 		return err //nolint:wrapcheck
 	}
 	return nil

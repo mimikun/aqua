@@ -6,7 +6,7 @@ import (
 
 	"github.com/aquaproj/aqua/v2/pkg/config"
 	"github.com/aquaproj/aqua/v2/pkg/controller"
-	"github.com/urfave/cli/v2"
+	"github.com/urfave/cli/v3"
 )
 
 func (r *Runner) newInstallCommand() *cli.Command {
@@ -64,7 +64,7 @@ $ aqua i --exclude-tags foo # Install only packages not having a tag "foo"
 	}
 }
 
-func (r *Runner) installAction(c *cli.Context) error {
+func (r *Runner) installAction(c *cli.Command) error {
 	tracer, err := startTrace(c.String("trace"))
 	if err != nil {
 		return err
@@ -81,6 +81,6 @@ func (r *Runner) installAction(c *cli.Context) error {
 	if err := r.setParam(c, "install", param); err != nil {
 		return fmt.Errorf("parse the command line arguments: %w", err)
 	}
-	ctrl := controller.InitializeInstallCommandController(c.Context, param, http.DefaultClient, r.Runtime)
-	return ctrl.Install(c.Context, r.LogE, param) //nolint:wrapcheck
+	ctrl := controller.InitializeInstallCommandController(c.Command, param, http.DefaultClient, r.Runtime)
+	return ctrl.Install(c.Command, r.LogE, param) //nolint:wrapcheck
 }

@@ -10,7 +10,7 @@ import (
 	"github.com/aquaproj/aqua/v2/pkg/controller"
 	"github.com/sirupsen/logrus"
 	"github.com/suzuki-shunsuke/logrus-error/logerr"
-	"github.com/urfave/cli/v2"
+	"github.com/urfave/cli/v3"
 )
 
 func (r *Runner) newWhichCommand() *cli.Command {
@@ -49,7 +49,7 @@ v2.4.0
 	}
 }
 
-func (r *Runner) whichAction(c *cli.Context) error {
+func (r *Runner) whichAction(c *cli.Command) error {
 	tracer, err := startTrace(c.String("trace"))
 	if err != nil {
 		return err
@@ -66,13 +66,13 @@ func (r *Runner) whichAction(c *cli.Context) error {
 	if err := r.setParam(c, "which", param); err != nil {
 		return fmt.Errorf("parse the command line arguments: %w", err)
 	}
-	ctrl := controller.InitializeWhichCommandController(c.Context, param, http.DefaultClient, r.Runtime)
+	ctrl := controller.InitializeWhichCommandController(c.Command, param, http.DefaultClient, r.Runtime)
 	exeName, _, err := parseExecArgs(c.Args().Slice())
 	if err != nil {
 		return err
 	}
 	logE := r.LogE.WithField("exe_name", exeName)
-	which, err := ctrl.Which(c.Context, logE, param, exeName)
+	which, err := ctrl.Which(c.Command, logE, param, exeName)
 	if err != nil {
 		return logerr.WithFields(err, logrus.Fields{ //nolint:wrapcheck
 			"exe_name": exeName,
